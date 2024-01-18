@@ -55,7 +55,10 @@ max_item, (max_count, max_percentage) = max(percentages.items(), key=lambda x: x
 print(f'Winner: {max_item}')
 
 # Export analysis results to a text file
-with open('analysis_results.txt', 'w') as file:
+folder_path = 'Analysis'
+file_name = 'analysis_results.txt'
+file_path = os.path.join(folder_path, file_name)
+with open(file_path, 'w') as file:
     file.write("Analysis Results:\n")
     file.write("-----------------\n")
     file.write(f"Total Votes: {row_count}\n")

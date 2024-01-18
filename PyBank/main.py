@@ -27,42 +27,44 @@ with open(csvpath) as csvfile:
 print(f'Sum of: ${column_sum}')
 
 # Average Change
-data = []
 with open(csvpath, 'r') as file:
-    csv_reader = csv.reader(file)
-    next(csv_reader)  
-    for row in csv_reader:
-        data.append(float(row[1]))  
+    reader = csv.reader(file)
+    next(reader)  
+    data = list(reader)
 
 changes = []
-for i in range(1, len(data)):
-    change = data[i] - data[i-1]
+dates = []
+previous_value = int(data[0][1])
+for row in data[1:]:
+    current_value = int(row[1])
+    change = current_value - previous_value
     changes.append(change)
-
+    dates.append(row[0]) 
+    previous_value = current_value
 average_change = sum(changes) / len(changes)
 print(f"Average Change: ${average_change:.2f}")
 
-max_change = max(changes)
+# Greatest Increase in Profits:
 min_change = min(changes)
-
-max_change_index = changes.index(max_change)
 min_change_index = changes.index(min_change)
+min_change_date = dates[min_change_index]
 
-data_with_cells = []
-with open(csvpath, 'r') as file:
-    csv_reader = csv.reader(file)
-    header = next(csv_reader)  
-    for row in csv_reader:
-        data_with_cells.append(dict(zip(header, row)))
-
-print("Greatest Increase in Profits:")
-for key, value in data_with_cells[max_change_index].items():
-    print(f"{key}: {value}")
-
-print("\nGreatest Decrease in Profits:")
-for key, value in data_with_cells[min_change_index].items():
-    print(f"{key}: {value}")
-
-# Greatest Increase in Profits
 max_change = max(changes)
-min_change = min(changes) 
+max_change_index = changes.index(max_change)
+max_change_date = dates[max_change_index]
+
+print(f'Greatest Increase in Profit: {max_change_date} (${max_change})')
+print(f'Greatest Increase in Profit: {min_change_date} (${min_change})')
+
+# Export analysis results to a text file
+folder_path = 'Analysis'
+file_name = 'analysis_results.txt'
+file_path = os.path.join(folder_path, file_name)
+with open(file_path, 'w') as file:
+    file.write("Financial Analysis:\n")
+    file.write("-----------------\n")
+    file.write(f"Total Months: {row_count}\n")
+    file.write(f"Average Change: ${average_change:.2f}")
+    file.write(f"Greatest Increase in Profit: {max_change_date} (${max_change})")
+    file.write(f"Greatest Increase in Profit: {min_change_date} (${min_change})")
+print("Analysis results exported to 'analysis_results.txt'.")
